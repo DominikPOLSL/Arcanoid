@@ -22,8 +22,8 @@ public:
 
 private:
 
-	float wys = 25;
-	float szer = 250;
+	int wys = 25;
+	int szer = 250;
 	float predkosc = 0.1;
 	sf::Vector2f velo{ predkosc,predkosc };
 

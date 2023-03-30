@@ -17,12 +17,8 @@ bool czy_kolizja(Plat& a, Pilka& b)
     if (!Kolizja(a, b))
         return false;
 
-    if (b.pierwszyR)
-    {
-        
+    if (b.pierwszyR)      
         b.pierwszyR = false;
-        std::cout << "Pierwsze odbicie";
-    }
 
     b.ruchG();
 
@@ -30,6 +26,8 @@ bool czy_kolizja(Plat& a, Pilka& b)
         b.ruchL();
     if (b.pozycja().x > a.pozycja().x)
         b.ruchP();
+
+    return true;
 }
 
 bool czy_kolizja2(Klocek& a, Pilka& b, int &punkty)
