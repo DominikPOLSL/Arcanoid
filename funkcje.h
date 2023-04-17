@@ -23,7 +23,6 @@ bool czy_kolizja(Plat& a, Pilka& b)
         b.pierwszyR = false;
 
     b.ruchG();
-
     
 
     if (b.pozycja().x < a.pozycja().x)
