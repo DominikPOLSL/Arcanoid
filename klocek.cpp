@@ -8,7 +8,7 @@ Klocek::Klocek(float x,float y,int r)
 	shape.setOrigin(wymiar/2, wymiar/2);
 	shape.setPosition(x, y);
 	shape.setSize({wymiar,wymiar});
-	shape.setFillColor(sf::Color(170,r, 0, 255));
+	shape.setFillColor(sf::Color(255,r, 255-r, 255));
 }
 
 void Klocek::draw(sf::RenderTarget& target, sf::RenderStates state) const

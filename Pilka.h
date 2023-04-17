@@ -17,7 +17,11 @@ public:
 	void ruchG();
 	void ruchD();
 	void ruchL();
+	void ruchL2();
+	void ruchL3();
 	void ruchP();
+	void ruchP2();
+	void ruchP3();
 	void resetuj();
 	void stop();
 	void pierwsze();
@@ -29,6 +33,7 @@ public:
 	float prawo();
 	float dol();
 	float gora();
+
 
 	sf::Vector2f pozycja();
 

@@ -65,7 +65,7 @@ int main()
        
         int wyborPoziom,x = 15,y;
         bool wybrano = false;
-    
+        bool zamknij = false;
         sf::RenderWindow window2(sf::VideoMode(400, 500), "Arcanoid - Dominik Pindych ");
         while (window2.isOpen())
         {
@@ -77,8 +77,10 @@ int main()
             while (window2.pollEvent(event))
             {
                 if (event.type == sf::Event::Closed)
-
+                {
+                    zamknij = true;
                     window2.close();
+                }
 
                 for (int i = 0; i < poziomy.size(); i++)
                     if (poziomy[i].getGlobalBounds().contains(translated_pos))
@@ -121,97 +123,101 @@ int main()
             }
         }
         
+        if (!zamknij)
+        {
         restart:
-        sf::RenderWindow window(sf::VideoMode(800, 800), "Dominik Pindych 21.03.2023");
-        std::vector<Klocek>klocki;
+            sf::RenderWindow window(sf::VideoMode(800, 800), "Dominik Pindych 21.03.2023");
+            std::vector<Klocek>klocki;
 
-        Pilka obiekt(500, 300 + (y * 15));  //Pilka
-        Plat test(300, 700); //Platforma
+            Pilka obiekt(500, 400 + (y * 15));  //Pilka
+            Plat test(300, 700); //Platforma
 
-        int iloscX{ x }, iloscY{ y }; //X i Y wybierane sa wyzej w swtich(case) na podstawie okna wyboru poziomu
-        int punkty = 0;
+            int iloscX{ x }, iloscY{ y }; //X i Y wybierane sa wyzej w swtich(case) na podstawie okna wyboru poziomu
+            int punkty = 0;
 
-        //Utworzenie klockow 
-        for (int j = 0; j < iloscX; j++)
-        {
-            srand(time(NULL));
-                for (int i = 0; i < iloscY; i++)
-                    klocki.emplace_back((j + 1) * 50, (i + 1) * 50, rand() % 255);            
-        }
-
-        while (window.isOpen())
-        {
-            sf::Vector2i pos = sf::Mouse::getPosition(window); //ALBO BEZ WINDOW
-            auto translated_pos = window.mapPixelToCoords(pos);
-            sf::Event event;
-            while (window.pollEvent(event))
+            //Utworzenie klockow 
+            for (int j = 2; j < iloscX-2; j++)
             {
-                if (event.type == sf::Event::Closed)
+                srand(time(NULL));
+                for (int i = 1; i < iloscY+1; i++)
+                    klocki.emplace_back((j + 1) * 50, (i + 1) * 50, rand() % 255);
+            }
+
+            while (window.isOpen())
+            {
+                sf::Vector2i pos = sf::Mouse::getPosition(window); //ALBO BEZ WINDOW
+                auto translated_pos = window.mapPixelToCoords(pos);
+                sf::Event event;
+                while (window.pollEvent(event))
                 {
-                    window.close();
-                    goto start;
+                    if (event.type == sf::Event::Closed)
+                    {
+                        window.close();
+                        goto start;
+                    }
                 }
-                if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::A)
-                    test.kierunek = 1;
-                if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::D)
-                    test.kierunek = -1;
-            }
 
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+                    test.shape.move({ -0.15 }, 0);
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+                    test.shape.move({ 0.15 }, 0);
 
-            //RESET GRY
-            if (res.getGlobalBounds().contains(translated_pos) && sf::Mouse::isButtonPressed(sf::Mouse::Left) && obiekt.reset(klocki, punkty))
-            {
-                obiekt.resetuj();
-                punkty = 0;
-                text.setString(std::to_string(punkty));
-                goto restart;
-            }
-
-            //KONIEC POZIOMU
-            if (klocki.size() == punkty)
-            {
-                text.setPosition(200, 200);
-                text.setString("WYGRANA");
-                res.setPosition(270, 300);
-                if (text.getGlobalBounds().contains(translated_pos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                //RESET GRY
+                if (res.getGlobalBounds().contains(translated_pos) && sf::Mouse::isButtonPressed(sf::Mouse::Left) && obiekt.reset(klocki, punkty))
                 {
                     obiekt.resetuj();
                     punkty = 0;
                     text.setString(std::to_string(punkty));
-                    goto start;
+                    goto restart;
                 }
-            }
-            
 
-            window.clear();
-            window.draw(tlo);
-            test.ruch();
-
-            czy_kolizja(test, obiekt);
-
-            for (auto& klocek : klocki)
-                if (czy_kolizja2(klocek, obiekt, punkty))
+                //KONIEC POZIOMU
+                if (klocki.size() == punkty)
                 {
-                    klocek.usun();
-                    text.setString(std::to_string(punkty));
-                    break;
+                    text.setPosition(200, 200);
+                    text.setString("WYGRANA");
+                    res.setPosition(270, 300);
+                    if (text.getGlobalBounds().contains(translated_pos) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                    {
+                        obiekt.resetuj();
+                        punkty = 0;
+                        text.setString(std::to_string(punkty));
+                        goto start;
+                    }
                 }
 
-            //WYSWIETLANIE
-            if (obiekt.reset(klocki, punkty))
-                window.draw(res);
+
+                window.clear();
+                window.draw(tlo);
+                test.ruch();
+
+                czy_kolizja(test, obiekt);
+
+                for (auto& klocek : klocki)
+                    if (czy_kolizja2(klocek, obiekt, punkty))
+                    {
+                        klocek.usun();
+                        text.setString(std::to_string(punkty));
+                        break;
+                    }
+
+                //WYSWIETLANIE
+                if (obiekt.reset(klocki, punkty))
+                    window.draw(res);
 
 
-            obiekt.ruch();
-            window.draw(text);
-            window.draw(test);
-            window.draw(obiekt);
+                //std::cout << "  " << rand() % 2;
+                //std::cout << "\n" << rand()%2;
+                obiekt.ruch();
+                window.draw(text);
+                window.draw(test);
+                window.draw(obiekt);
 
-            for (auto& klocek : klocki)
-                window.draw(klocek);
-            window.display();
+                for (auto& klocek : klocki)
+                    window.draw(klocek);
+                window.display();
+            }
         }
-
         return 0;
 
 }

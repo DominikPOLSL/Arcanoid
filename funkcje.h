@@ -14,20 +14,33 @@ template <class T1, class T2> bool Kolizja(T1& a, T2& b)
 
 bool czy_kolizja(Plat& a, Pilka& b)
 {
+    
     if (!Kolizja(a, b))
         return false;
+   
 
-    if (b.pierwszyR)      
+    if (b.pierwszyR)
         b.pierwszyR = false;
 
     b.ruchG();
+
+    
 
     if (b.pozycja().x < a.pozycja().x)
         b.ruchL();
     if (b.pozycja().x > a.pozycja().x)
         b.ruchP();
+    if (b.pozycja().x < a.pozycja().x + 80 && b.pozycja().x > a.pozycja().x)
+        b.ruchP2();
+    if (b.pozycja().x < a.pozycja().x && b.pozycja().x > a.pozycja().x - 80)
+        b.ruchL2();
+    if (b.pozycja().x < a.pozycja().x + 30 && b.pozycja().x > a.pozycja().x)
+        b.ruchP3();
+    if (b.pozycja().x < a.pozycja().x && b.pozycja().x > a.pozycja().x - 30)
+        b.ruchL3();
 
-    return true;
+
+
 }
 
 bool czy_kolizja2(Klocek& a, Pilka& b, int &punkty)
@@ -35,7 +48,6 @@ bool czy_kolizja2(Klocek& a, Pilka& b, int &punkty)
     if (!Kolizja(a, b))
         return false;
 
-    
     float przesuniecieL { b.prawo() - a.lewo() };
     float przesuniecieP{ a.prawo() - b.lewo() };
     float przesuniecieG{ b.gora() - a.dol() };
@@ -56,6 +68,7 @@ bool czy_kolizja2(Klocek& a, Pilka& b, int &punkty)
         zgory ? b.ruchD() : b.ruchG();
     }
 
+    //b.dodaj();
     a.usun();
     punkty++;
     return true;

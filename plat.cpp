@@ -20,22 +20,12 @@ void Plat::draw(sf::RenderTarget& target, sf::RenderStates state) const
 void Plat::ruch()
 {
 
-	if (this->kierunek == -1)
-	{
-		shape.move(this->predkosc,0);
-		this->kierunek = -1;
-	}
-	if (this->kierunek == 1)
-	{
-		shape.move(this->predkosc - (2 * this->predkosc),0);
-		this->kierunek = 1;
-	}
 	if (shape.getPosition().x > 800 - shape.getSize().x/2)
 	{
-		kierunek = 1;
+		shape.move({ -0.15,0 });
 	}
-	if (shape.getPosition().x < 0 + shape.getSize().x/2)
-		kierunek = -1;
+	if (shape.getPosition().x < 0 + shape.getSize().x / 2)
+		shape.move({ 0.15,0 });
 }
 
 float Plat::lewo()

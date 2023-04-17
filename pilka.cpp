@@ -27,7 +27,7 @@ void Pilka::ruch()
 	
 	if (pierwszyR)
 	{
-		shape.move(velo.x, velo.y/1.3);
+		shape.move(velo.x, velo.y/1.7);
 
 		if (this->lewo() < 0)
 			velo.x = predkosc;
@@ -124,10 +124,38 @@ void Pilka::ruchL()
 	this->velo.x = -predkosc;
 }
 
+
 void Pilka::ruchP()
 {
 	this->velo.x = predkosc;
 }
+
+void Pilka::ruchL2()
+{
+	this->velo.x = -predkosc+0.02;
+	this->velo.y = -predkosc - 0.03;
+}
+
+
+void Pilka::ruchP2()
+{
+	this->velo.x = predkosc-0.02;
+	this->velo.y = -predkosc - 0.03;
+}
+
+void Pilka::ruchL3()
+{
+	this->velo.x = -predkosc + 0.05;
+	this->velo.y = -predkosc - 0.07;
+}
+
+
+void Pilka::ruchP3()
+{
+	this->velo.x = predkosc - 0.05;
+	this->velo.y = -predkosc - 0.07;
+}
+
 
 sf::Vector2f Pilka::pozycja()
 {
