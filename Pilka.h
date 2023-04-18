@@ -43,7 +43,7 @@ private:
 	void draw(sf::RenderTarget& target, sf::RenderStates state) const override;
 	int rozmiar = 25;
 	int kierunek;
-	float predkosc = 0.1;
+	float predkosc = 0.15;
 	sf::Vector2f velo{predkosc,predkosc};
 
 };
