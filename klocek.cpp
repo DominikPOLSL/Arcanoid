@@ -3,6 +3,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <Windows.h>
+
 Klocek::Klocek(float x,float y,int r)
 {
 	shape.setOrigin(wymiar/2, wymiar/2);

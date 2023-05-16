@@ -19,6 +19,8 @@ int main()
         sf::Text poziomTrudnosci;
         sf::Text wybierz2;
         sf::Text autor;
+        sf::Text nick;
+        sf::Text nazwaGracza;
         sf::Texture tlo1;
         sf::Texture t1;
         sf::Sprite restartPrzycisk;
@@ -27,15 +29,17 @@ int main()
 
         std::vector<sf::Text>poziomy = {};       
         std::vector<sf::Text>szybkosci = {};
-        start(font,text, poziomTrudnosci,wybierz2,autor,tlo1,t1, restartPrzycisk,tlo,poziomy);
+        start(font,text, poziomTrudnosci,wybierz2,autor,tlo1,t1, restartPrzycisk,tlo,poziomy,nick,nazwaGracza);
 
+        std::string nickString;
         
-       
         int wyborPoziom,x = 15,y;
+        int wynik = 0;
         bool wybrano = false;
         bool zamknij = false;
 
         sf::RenderWindow window2(sf::VideoMode(400, 500), "Arcanoid - Dominik Pindych ");
+
         while (window2.isOpen())
         {
 
@@ -50,7 +54,25 @@ int main()
                     zamknij = true;
                     window2.close();
                 }
+                
+                        //Wpisywanie nicku gracza
+                    if (event.type == sf::Event::TextEntered)
+                    {
+                        if (event.text.unicode == '\b' && nickString.size() > 0)
+                        {
+                            nickString.pop_back();                           
+                            nick.setPosition(nick.getPosition().x + 5, nick.getPosition().y);
+                            nick.setString(nickString);
+                        }
+                        else
+                        {
+                            nick.setPosition(nick.getPosition().x - 5, nick.getPosition().y);
+                            nickString += event.text.unicode;
+                            nick.setString(nickString);
+                        }
+                    }
 
+                    
                 for (int i = 0; i < poziomy.size(); i++)
                     if (poziomy[i].getGlobalBounds().contains(translated_pos))
                     {
@@ -64,17 +86,9 @@ int main()
                     }else poziomy[i].setFillColor(sf::Color::White);
             }
 
-            switch (wyborPoziom)
-            {
-                case 0: { y = 1; restartPrzycisk.setPosition(250, y * 20 + 200); break;  }
-                case 1: { y = 2; restartPrzycisk.setPosition(250, y * 20 + 200); break;  }
-                case 2: { y = 3; restartPrzycisk.setPosition(250, y * 20 + 200); break;  }
-                case 3: { y = 4; restartPrzycisk.setPosition(250, y * 20 + 200); break;  }
-                case 4: { y = 5; restartPrzycisk.setPosition(250, y * 20 + 200); break;  }
-                case 5: { y = 6; restartPrzycisk.setPosition(250, y * 20 + 200); break;  }
-                case 6: { y = 7; restartPrzycisk.setPosition(250, y * 20 + 200); break;  }
-                default: { y = 1; restartPrzycisk.setPosition(250, y * 20 + 200); break; }
-            }
+            wyborPoziomu(wyborPoziom, restartPrzycisk,y);
+
+            
 
             window2.clear();
             window2.draw(tlo);
@@ -82,19 +96,27 @@ int main()
             window2.draw(autor);
             for (auto i : poziomy)
                 window2.draw(i);
+
+            window2.draw(nick);
+            window2.draw(nazwaGracza);
+
             window2.display();
 
             //Restart opcji wybrania poziomu
             if (wybrano)
             {
+                
                 wybrano = false;
                 break;               
             }
         }
+
         
         if (!zamknij)
         {
+
         restart:
+            
             sf::RenderWindow window(sf::VideoMode(800, 800), "Dominik Pindych 21.03.2023");
             std::vector<Klocek>klocki;
             std::vector<Bonus>bonusy;
@@ -105,7 +127,7 @@ int main()
             int iloscX{ x }, iloscY{ y }; //X i Y wybierane sa wyzej w swtich(case) na podstawie okna wyboru poziomu
             int punkty = 0;
             int dodatkowe = 0;
-            int wynik = 0;
+            wynik = 0;
 
             //Utworzenie klockow 
             for (int j = 2; j < iloscX-2; j++)
@@ -125,6 +147,7 @@ int main()
                     if (event.type == sf::Event::Closed)
                     {
                         window.close();
+                        zapis(wynik, nickString);
                         goto start;
                     }
                 }
@@ -137,11 +160,12 @@ int main()
                 //RESET GRY
                 if (restartPrzycisk.getGlobalBounds().contains(translated_pos) && sf::Mouse::isButtonPressed(sf::Mouse::Left) && obiekt.reset(klocki, punkty))
                 {
+                    zapis(wynik, nickString);
                     obiekt.resetuj();
                     punkty = 0;
                     wynik = 0;
                     text.setString(std::to_string(wynik));
-                    text.setPosition(700, 700);
+                    text.setPosition(700, 700);             
                     goto restart;
                 }
 
@@ -156,6 +180,8 @@ int main()
                         obiekt.resetuj();
                         punkty = 0;
                         text.setString(std::to_string(wynik));
+
+
                         goto start;
                     }
                 }
@@ -171,7 +197,6 @@ int main()
                     if (czy_kolizja2(klocek, obiekt, punkty,bonusy))
                     {
                         klocek.usun();
-                        //wynik = punkty + dodatkowe;
                         wynik++;
                         text.setString(std::to_string(wynik));
                         break;
@@ -196,12 +221,14 @@ int main()
                     }
                     i.ruch();
                 }
-                //wynik = punkty + dodatkowe;
+
                 for (auto& klocek : klocki)
                     window.draw(klocek);
                 window.display();
             }
+                     
         }
+
         return 0;
 
 }

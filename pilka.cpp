@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <Windows.h>
+#include "funkcje.h"
 
 Pilka::Pilka(float x, float y)
 {
@@ -133,27 +134,27 @@ void Pilka::ruchP()
 void Pilka::ruchL2()
 {
 	this->velo.x = -predkosc+0.02;
-	this->velo.y = -predkosc - 0.03;
+	this->velo.y = -predkosc - 0.02;
 }
 
 
 void Pilka::ruchP2()
 {
 	this->velo.x = predkosc-0.02;
-	this->velo.y = -predkosc - 0.03;
+	this->velo.y = -predkosc - 0.02;
 }
 
 void Pilka::ruchL3()
 {
 	this->velo.x = -predkosc + 0.05;
-	this->velo.y = -predkosc - 0.07;
+	this->velo.y = -predkosc -0.05;
 }
 
 
 void Pilka::ruchP3()
 {
 	this->velo.x = predkosc - 0.05;
-	this->velo.y = -predkosc - 0.07;
+	this->velo.y = -predkosc -0.05;
 }
 
 

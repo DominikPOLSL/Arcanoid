@@ -20,7 +20,7 @@ public:
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates state) const override;
 	int rozmiar = 10;
-	float predkosc = 0.15;
+	float predkosc = 0.13;
 	sf::Vector2f velo{ predkosc,predkosc };
 };
 
